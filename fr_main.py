@@ -8,6 +8,9 @@ from utils import data, file
 
 
 def main(args):
+
+    os.chdir("../")
+
     ''' load config file '''
     with open(args.config_file, "r") as f:
         config = json.load(f)

@@ -13,3 +13,6 @@ config.conf
 
 # 日志文件
 log/
+
+# 启动脚本
+shell/
