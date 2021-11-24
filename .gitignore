@@ -10,3 +10,6 @@ result/
 
 # 配置文件
 config.conf
+
+# 日志文件
+log/
