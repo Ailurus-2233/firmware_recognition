@@ -1,3 +1,5 @@
+from operator import le
+import re
 import pymongo
 import pandas as pd
 
@@ -5,8 +7,11 @@ import pandas as pd
 # 通过配置文件获取mongodb链接
 def get_MongoClient(config):
     db_config = config["database"]
-    url = "mongodb://{}:{}@{}:{}".format(
-        db_config["user"], db_config["password"], db_config["address"], db_config["port"])
+    if db_config["user"] == "":
+        url = f"mongodb://{db_config['address']}:{db_config['port']}"
+    else:
+        url = "mongodb://{}:{}@{}:{}".format(
+            db_config["user"], db_config["password"], db_config["address"], db_config["port"])
     return pymongo.MongoClient(url)
 
 
@@ -26,6 +31,17 @@ def is_have_firmware(collection, file_md5, vendor):
     df = df_find_result(
         collection, {"match_vendor": vendor, "firmware_file_md5": file_md5})
     return len(df.values) > 0
+
+
+# 判断是否有product信息
+def is_have_match_product(collection, file_md5):
+    df = df_find_result(collection, {
+        "firmware_file_md5": file_md5
+    })
+    if len(df.values) == 0:
+        return False
+    else:
+        return df.values[0][4] != None
 
 
 # 插入一条固件完整信息
